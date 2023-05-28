@@ -14,7 +14,7 @@ void drawMaze(SDL_Renderer* renderer)
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 20);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 20);
     for (int x = 0; x < MAZE_WIDTH; ++x) {
         for (int y = 0; y < MAZE_HEIGHT; ++y) {
             if (maze[x][y]) {
