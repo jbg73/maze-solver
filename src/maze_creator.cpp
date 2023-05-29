@@ -6,8 +6,8 @@
 #include <random>
 
 const int WINDOW_WIDTH = 600;
-const int WINDOW_HEIGHT = 480;
-const int CELL_SIZE = 20;
+const int WINDOW_HEIGHT = 600;
+const int CELL_SIZE = 10;
 const int GRID_WIDTH = WINDOW_WIDTH / CELL_SIZE;
 const int GRID_HEIGHT = WINDOW_HEIGHT / CELL_SIZE;
 
@@ -18,10 +18,11 @@ struct Cell{
     int y;
     bool walls[4];
 
-    Cell() : x{0}, y{0}, walls{true, true, true, true}{}
-    Cell(int x_val, int y_val, bool walls_val[]) : x{x_val}, y{y_val}
-    {
-        for(int i = 0; i < 4; i++) walls[i] = walls_val[i];
+    Cell() : x{0}, y{0}, walls{true,true,true,true}{}
+    Cell(int x_val, int y_val, bool walls_vals[4]) : x{x_val}, y{y_val}{
+        for(int i = 0; i < 4; i++){
+            walls[i] = walls_vals[i];
+        }
     }
 };
 
@@ -31,17 +32,17 @@ t_vcells visited_cells;
 void InitializeMaze(Cell** maze){
 
     bool walls[4] = {true,true,true,true};
-    for(int i = 0; i < WINDOW_WIDTH; i++){
-        maze[i] = new Cell[WINDOW_HEIGHT];
-        for(int j = 0; j < WINDOW_HEIGHT; j++){
-            maze[i][j] = Cell(i,j,walls);
+    for(int i = 0; i < GRID_WIDTH; i++){
+        maze[i] = new Cell[GRID_HEIGHT];
+        for(int j = 0; j < GRID_HEIGHT; j++){
+            maze[i][j] = Cell(i,j, walls);
         }
     }
     
 }
 
 void DisplayCellStatus(const Cell* c){
-    std::cout << "Position: (" << c->x << ", " << c->y << ")" << "\t" << "N:" << c->walls[0] << " E:" << c->walls[1] << " S:" << c->walls[2] << " W:" << c->walls[3] << std::endl;
+    // std::cout << "Position: (" << c->x << ", " << c->y << ")" << "\t" << "N:" << c->walls[0] << " E:" << c->walls[1] << " S:" << c->walls[2] << " W:" << c->walls[3] << std::endl;
 }
 
 bool IsCellVisited(int xCoord, int yCoord){
@@ -60,19 +61,19 @@ void UpdateCellWalls(Cell** maze, Cell c, int dir){
     // Open wall next cell FROM direction
     switch(dir){
         case 0: //UP
-            maze[c.x][c.y-1].walls[DOWN] = false;
+            maze[c.x][c.y-1].walls[2] = false;
             break;
         
         case 1: //RIGHT
-            maze[c.x+1][c.y].walls[LEFT] = false;
+            maze[c.x+1][c.y].walls[3] = false;
             break;
         
         case 2: //DOWN
-            maze[c.x][c.y+1].walls[UP] = true;
+            maze[c.x][c.y+1].walls[0] = false;
             break;
         
         case 3: //LEFT
-            maze[c.x-1][c.y].walls[RIGHT] = false;
+            maze[c.x-1][c.y].walls[1] = false;
             break;
         
         default:
@@ -85,9 +86,9 @@ bool HasNonVisitedNeighbours(Cell current_cell){
     //Check UP
     if(current_cell.y-1 >= 0 && !IsCellVisited(current_cell.x, current_cell.y-1)) return true;
     //Check RIGHT
-    if(current_cell.x+1 < WINDOW_WIDTH && !IsCellVisited(current_cell.x+1, current_cell.y)) return true;
+    if(current_cell.x+1 < GRID_WIDTH && !IsCellVisited(current_cell.x+1, current_cell.y)) return true;
     //Check Bottom
-    if(current_cell.y+1 < WINDOW_HEIGHT && !IsCellVisited(current_cell.x, current_cell.y+1)) return true;
+    if(current_cell.y+1 < GRID_HEIGHT && !IsCellVisited(current_cell.x, current_cell.y+1)) return true;
     //Check left
     if(current_cell.x-1 >= 0 && !IsCellVisited(current_cell.x-1, current_cell.y)) return true;
 
@@ -100,9 +101,9 @@ int SelectRandomNeighbour(Cell current_cell){ // Problema con lo que se esta dev
     //Check UP
     if(current_cell.y-1 >= 0 && !IsCellVisited(current_cell.x, current_cell.y-1)) non_visited_neighbours.push_back(0);
     //Check RIGHT
-    if(current_cell.x+1 < WINDOW_WIDTH && !IsCellVisited(current_cell.x+1, current_cell.y)) non_visited_neighbours.push_back(1);
+    if(current_cell.x+1 < GRID_WIDTH && !IsCellVisited(current_cell.x+1, current_cell.y)) non_visited_neighbours.push_back(1);
     //Check Bottom
-    if(current_cell.y+1 < WINDOW_HEIGHT && !IsCellVisited(current_cell.x, current_cell.y+1)) non_visited_neighbours.push_back(2);
+    if(current_cell.y+1 < GRID_HEIGHT && !IsCellVisited(current_cell.x, current_cell.y+1)) non_visited_neighbours.push_back(2);
     //Check left
     if(current_cell.x-1 >= 0 && !IsCellVisited(current_cell.x-1, current_cell.y)) non_visited_neighbours.push_back(3);
 
@@ -167,24 +168,44 @@ void GenerateRandomMaze(Cell** maze, Cell current_cell)
 
 }
 
+std::vector<std::pair<int,int>> GetCellEdges(Cell c){
+
+    std::vector<std::pair<int,int>> cell_edges(4);
+
+    cell_edges[0] = std::make_pair(c.x*CELL_SIZE, c.y*CELL_SIZE); // top left
+    cell_edges[1] = std::make_pair((c.x+1)*CELL_SIZE, c.y*CELL_SIZE); // top right
+    cell_edges[2] = std::make_pair((c.x+1)*CELL_SIZE, (c.y+1)*CELL_SIZE); // bottom right
+    cell_edges[3] = std::make_pair(c.x*CELL_SIZE, (c.y+1)*CELL_SIZE); // bottom left
+
+    return cell_edges;
+     
+
+}
+
 void DrawGrid(SDL_Renderer* renderer, Cell** maze){
     // Set the color for drawing walls
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // White color
     
-    // for(int i = 0; i < WINDOW_WIDTH; i++){
-    //     for(int j = 0; j < WINDOW_HEIGHT; j++){
-    //         if(maze[i][j].walls[0]) SDL_RenderDrawLine(renderer, )
-    //     }
-    // }
+    std::vector<std::pair<int, int>> cell_edges(4);
 
-    for (int x = 0; x < GRID_WIDTH; x++) {
-        SDL_RenderDrawLine(renderer, x * CELL_SIZE, 0, x * CELL_SIZE, WINDOW_HEIGHT);
+    for(int i = 0; i < GRID_WIDTH; i++){
+        for(int j = 0; j < GRID_HEIGHT; j++){
+            cell_edges = GetCellEdges(maze[i][j]);
+            if(maze[i][j].walls[0]) SDL_RenderDrawLine(renderer, cell_edges[0].first, cell_edges[0].second, cell_edges[1].first, cell_edges[1].second);
+            if(maze[i][j].walls[1]) SDL_RenderDrawLine(renderer, cell_edges[1].first, cell_edges[1].second, cell_edges[2].first, cell_edges[2].second);
+            if(maze[i][j].walls[2]) SDL_RenderDrawLine(renderer, cell_edges[2].first, cell_edges[2].second, cell_edges[3].first, cell_edges[3].second);
+            if(maze[i][j].walls[3]) SDL_RenderDrawLine(renderer, cell_edges[3].first, cell_edges[3].second, cell_edges[0].first, cell_edges[0].second);
+        }
     }
+
+    // for (int x = 0; x < WINDOW_WIDTH; x++) {
+    //     SDL_RenderDrawLine(renderer, x * CELL_SIZE, 0, x * CELL_SIZE, WINDOW_HEIGHT);
+    // }
     
-    // Draw the horizontal walls
-    for (int y = 0; y < GRID_HEIGHT; y++) {
-        SDL_RenderDrawLine(renderer, 0, y * CELL_SIZE, WINDOW_WIDTH, y * CELL_SIZE);
-    }
+    // // Draw the horizontal walls
+    // for (int y = 0; y < WINDOW_HEIGHT; y++) {
+    //     SDL_RenderDrawLine(renderer, 0, y * CELL_SIZE, WINDOW_WIDTH, y * CELL_SIZE);
+    // }
 
     // Update the renderer
     SDL_RenderPresent(renderer);
@@ -195,15 +216,17 @@ int main() {
     SDL_Init(SDL_INIT_VIDEO);
     
     // Create an SDL window and renderer
-    SDL_Window* window = SDL_CreateWindow("SDL Grid", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+    SDL_Window* window = SDL_CreateWindow("SDL Grid", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH+1, WINDOW_HEIGHT+1, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     
     // Clear the renderer
     SDL_RenderClear(renderer);
     
-    Cell **maze = new Cell*[WINDOW_WIDTH];
+    Cell **maze = new Cell*[GRID_WIDTH];
     InitializeMaze(maze);
-    GenerateRandomMaze(maze, maze[1][1]);
+    GenerateRandomMaze(maze, maze[0][0]);
+
+    std::cout << "Maze generated" << std::endl;
 
     DrawGrid(renderer, maze);
 
@@ -220,7 +243,7 @@ int main() {
     }
     
     // Cleanup and quit SDL
-    for(int i = 0; i < WINDOW_WIDTH; i++){
+    for(int i = 0; i < GRID_WIDTH; i++){
         delete [] maze[i];
     }
     delete [] maze;
