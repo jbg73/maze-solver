@@ -36,8 +36,8 @@ struct Cell{
     bool IsCellVisited() const;
     bool IsCellVisited(int pos_x, int pos_y) const;
     bool HasNonVisitedNeighbours() const;
-    int SelectRandomPossibleDirection() const;
-    Cell GetNextCell(int dir) const;
+    DIRECTION SelectRandomPossibleDirection() const;
+    Cell GetNextCell(DIRECTION dir) const;
     std::vector<std::pair<int,int>> GetCellEdges() const;
 };
 
@@ -72,47 +72,49 @@ bool Cell::HasNonVisitedNeighbours() const{
     return false;
 }
 
-int Cell::SelectRandomPossibleDirection() const{
-    std::vector<int> non_visited_neighbours;
+DIRECTION Cell::SelectRandomPossibleDirection() const{
+    std::vector<DIRECTION> non_visited_neighbours;
     //Check UP
-    if(y-1 >= 0 && !IsCellVisited(x, y-1)) non_visited_neighbours.push_back(0);
+    if(y-1 >= 0 && !IsCellVisited(x, y-1)) non_visited_neighbours.push_back(UP);
     //Check RIGHT
-    if(x+1 < GRID_WIDTH && !IsCellVisited(x+1, y)) non_visited_neighbours.push_back(1);
+    if(x+1 < GRID_WIDTH && !IsCellVisited(x+1, y)) non_visited_neighbours.push_back(RIGHT);
     //Check Bottom
-    if(y+1 < GRID_HEIGHT && !IsCellVisited(x, y+1)) non_visited_neighbours.push_back(2);
+    if(y+1 < GRID_HEIGHT && !IsCellVisited(x, y+1)) non_visited_neighbours.push_back(DOWN);
     //Check left
-    if(x-1 >= 0 && !IsCellVisited(x-1, y)) non_visited_neighbours.push_back(3);
+    if(x-1 >= 0 && !IsCellVisited(x-1, y)) non_visited_neighbours.push_back(LEFT);
 
     if(non_visited_neighbours.size() > 0){
         std::random_device rd;
         std::mt19937 rng(rd());
         std::uniform_int_distribution<int> dist(0, non_visited_neighbours.size() - 1);
-        int selected_dir = dist(rng);
-        return non_visited_neighbours[selected_dir];
+        return static_cast<DIRECTION>(non_visited_neighbours[dist(rng)]);
+        // int selected_dir = dist(rng);
+        // DIRECTION dir = static_cast<DIRECTION>(non_visited_neighbours[selected_dir]);
+        // return static_cast<DIRECTION>(non_visited_neighbours[selected_dir]);
     }
-    return -1;
+    return NONE;
 }
 
-Cell Cell::GetNextCell(int dir) const{
+Cell Cell::GetNextCell(DIRECTION dir) const{
     Cell next_cell;
 
     switch(dir){
-        case 0: //UP
+        case UP: //UP
             next_cell.x = x;
             next_cell.y = y-1;
             break;
         
-        case 1: //RIGHT
+        case RIGHT: //RIGHT
             next_cell.x = x+1;
             next_cell.y = y;
             break;
         
-        case 2: //DOWN
+        case DOWN: //DOWN
             next_cell.x = x;
             next_cell.y = y+1;
             break;
         
-        case 3: //LEFT
+        case LEFT: //LEFT
             next_cell.x = x-1;
             next_cell.y = y;
             break;
@@ -149,7 +151,7 @@ public:
 private:
 
     // bool IsCellVisited(int xCoord, int yCoord) const;
-    void UpdateCellWalls(Cell c, int dir);
+    void UpdateCellWalls(Cell c, DIRECTION dir);
 
     Cell** maze;
 
@@ -174,26 +176,26 @@ MazeController::~MazeController(){
     delete [] maze;
 }
 
-void MazeController::UpdateCellWalls(Cell c, int dir){
+void MazeController::UpdateCellWalls(Cell c, DIRECTION dir){
     // Open wall current cell TO direction
     maze[c.x][c.y].walls[dir] = false;
 
     // Open wall next cell FROM direction
     switch(dir){
-        case 0: //UP
-            maze[c.x][c.y-1].walls[2] = false;
+        case UP: //UP
+            maze[c.x][c.y-1].walls[DOWN] = false;
             break;
         
-        case 1: //RIGHT
-            maze[c.x+1][c.y].walls[3] = false;
+        case RIGHT: //RIGHT
+            maze[c.x+1][c.y].walls[LEFT] = false;
             break;
         
-        case 2: //DOWN
-            maze[c.x][c.y+1].walls[0] = false;
+        case DOWN: //DOWN
+            maze[c.x][c.y+1].walls[UP] = false;
             break;
         
-        case 3: //LEFT
-            maze[c.x-1][c.y].walls[1] = false;
+        case LEFT: //LEFT
+            maze[c.x-1][c.y].walls[RIGHT] = false;
             break;
         
         default:
@@ -204,7 +206,7 @@ void MazeController::UpdateCellWalls(Cell c, int dir){
 void MazeController::GenerateRandomMaze(Cell current_cell){
     current_cell.visited_cells.push_back(maze[current_cell.x][current_cell.y]);
     while(current_cell.HasNonVisitedNeighbours()){
-        int next_dir = current_cell.SelectRandomPossibleDirection();
+        DIRECTION next_dir = current_cell.SelectRandomPossibleDirection();
         UpdateCellWalls(current_cell, next_dir);
         Cell next_cell = current_cell.GetNextCell(next_dir);
         // DisplayVisitedCells();
