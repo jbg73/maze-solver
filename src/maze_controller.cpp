@@ -1,10 +1,4 @@
-#include <iostream>
-// #include <SDL.h>
-
-#include <SDL2/SDL.h>
-#include <vector>
-#include <random>
-#include <maze_generator.h>
+#include <maze_controller.h>
 
 
 
@@ -19,6 +13,8 @@ MazeController::MazeController(){
         }
     }
 }
+
+
 
 MazeController::~MazeController(){
     for(int i = 0; i < GRID_WIDTH; i++){
@@ -63,6 +59,7 @@ void MazeController::GenerateRandomMaze(Cell current_cell){
         // DisplayVisitedCells();
         GenerateRandomMaze(maze[next_cell.x][next_cell.y]);
     }
+    
 }
 
 

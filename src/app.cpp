@@ -1,6 +1,6 @@
 #include <ui_controller.h>
-#include <maze_generator.h>
-
+#include <maze_controller.h>
+#include <algorithms.h>
 
 
 int main(){
@@ -19,6 +19,14 @@ int main(){
 
     ui_controller->PaintCell(initial_cell);
     
+    // ui_controller->ShowWindow();
+
+    Algorithms algorithm_controller(*maze_controller, *ui_controller); //TODO: Why do I need *
+
+    algorithm_controller.SetStartTime();
+
+    algorithm_controller.SolveA_Star(maze_controller->GetMaze()[0][0]);
+
     ui_controller->ShowWindow();
 
     // Wait for a key press to exit

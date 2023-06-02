@@ -7,5 +7,5 @@ include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(include)
 include_directories(common)
 
-add_executable(maze-solver src/app.cpp src/cell.cpp src/maze_generator.cpp src/ui_controller.cpp)
+add_executable(maze-solver src/app.cpp src/cell.cpp src/maze_controller.cpp src/ui_controller.cpp src/algorithms.cpp)
 target_link_libraries(maze-solver ${SDL2_LIBRARIES})
