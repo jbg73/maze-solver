@@ -1,0 +1,29 @@
+#ifndef MAZE_SOLVER_UI_CONTROLLER_H
+#define MAZE_SOLVER_UI_CONTROLLER_H
+
+#include <SDL2/SDL.h>
+#include <cell.h>
+#include <globals.h>
+
+class UIController{
+
+public:
+
+    UIController();
+    ~UIController();
+
+       
+    void DrawGrid(Cell** maze) const;
+    void PaintCell(Cell c, int r=255, int g=165, int b=0) const;
+    void ShowWindow() const;
+
+private:
+
+    void InitializeUI(); 
+
+    SDL_Window* window;
+    SDL_Renderer* renderer;
+
+};
+
+#endif
