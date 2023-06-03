@@ -21,7 +21,9 @@ struct Cell{
         }
     }
 
+    void ClearVisitedCells(){visited_cells.clear();}
     bool IsCellVisited() const;
+    bool IsCellVisited(DIRECTION dir) const;
     bool IsCellVisited(int pos_x, int pos_y) const;
     bool HasNonVisitedNeighbours() const;
     DIRECTION SelectRandomPossibleDirection() const;

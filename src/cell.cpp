@@ -11,6 +11,38 @@ bool Cell::IsCellVisited() const{
     return false;
 }
 
+bool Cell::IsCellVisited(DIRECTION dir) const{
+    Cell c;
+    switch (dir)
+    {
+    case UP:
+        c.x = this->x;
+        c.y = this->y-1;
+        break;
+    
+    case RIGHT:
+        c.x = this->x+1;
+        c.y = this->y;
+        break;
+
+    case DOWN:
+        c.x = this->x;
+        c.y = this->y+1;
+        break;
+
+    case LEFT:
+        c.x = this->x-1;
+        c.y = this->y;
+        break;
+
+    default:
+        break;
+    }
+
+    return IsCellVisited(c.x, c.y);
+
+}
+
 bool Cell::IsCellVisited(int pos_x, int pos_y) const{
     for(int i = 0; i < visited_cells.size(); i++){
         if(visited_cells[i].x == pos_x && visited_cells[i].y == pos_y) 

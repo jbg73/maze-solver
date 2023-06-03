@@ -1,7 +1,7 @@
 #include <ui_controller.h>
 #include <maze_controller.h>
 #include <algorithms.h>
-
+#include <thread>
 
 int main(){
 
@@ -9,23 +9,27 @@ int main(){
 
     MazeController* maze_controller = new MazeController();
 
-    bool walls[4] = {true,true,true,true};
-    Cell initial_cell(0, 0, walls);
-    maze_controller->GenerateRandomMaze(initial_cell);
+    maze_controller->GenerateRandomMaze(maze_controller->GetMaze()[0][0]);
 
     std::cout << "Maze generated" << std::endl;
+    maze_controller->GetMaze()[0][0].ClearVisitedCells();
+    
 
     ui_controller->DrawGrid(maze_controller->GetMaze());
-
-    ui_controller->PaintCell(initial_cell);
-    
-    // ui_controller->ShowWindow();
-
+    SDL_RenderPresent(ui_controller->GetRenderer());
+    // std::string a;
+    // // getline (std::cin, a);
+    // getline(std::cin);
+    // std::cin.get();
+    std::this_thread::sleep_for(std::chrono::seconds(2));
     Algorithms algorithm_controller(*maze_controller, *ui_controller); //TODO: Why do I need *
 
     algorithm_controller.SetStartTime();
 
-    algorithm_controller.SolveA_Star(maze_controller->GetMaze()[0][0]);
+    algorithm_controller.BruteForce(maze_controller->GetMaze()[0][0]);
+    std::cout << "Solved Brute Force" << std::endl;
+    ui_controller->DrawGrid(maze_controller->GetMaze());
+    // algorithm_controller.SolveA_Star(maze_controller->GetMaze()[20][20]);
 
     ui_controller->ShowWindow();
 

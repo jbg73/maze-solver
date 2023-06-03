@@ -15,9 +15,13 @@ public:
 
     void SetStartTime() {start_time = std::chrono::high_resolution_clock::now();}
     void SolveA_Star(Cell current_cell);
+    void BruteForce(Cell current_cell);
 
 private:
 
+    DIRECTION SelectRandomPossibleDirection(Cell current_cell);
+
+    std::vector<Cell> visited_cells;
     Cell** maze; 
     UIController& ui_controller;
     std::chrono::time_point<std::chrono::high_resolution_clock> start_time;
