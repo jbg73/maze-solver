@@ -23,94 +23,65 @@ MazeController::~MazeController(){
     delete [] maze;
 }
 
-void MazeController::UpdateCellWalls(Cell c, DIRECTION dir){
-    // Open wall current cell TO direction
-    maze[c.x][c.y].walls[dir] = false;
+// void MazeController::UpdateCellWalls(Cell* c, DIRECTION dir){
+//     switch(dir){
+//         case UP:
+//             c->walls[DOWN] = false;
+//             break;
 
-    // Open wall next cell FROM direction
-    switch(dir){
-        case UP: //UP
-            maze[c.x][c.y-1].walls[DOWN] = false;
-            break;
+//         case RIGHT:
+//             c->walls[LEFT] = false;
+//             break;
+
+//         case DOWN:
+//             c->walls[UP] = false;
+//             break;
+
+//         case LEFT:
+//             c->walls[RIGHT] = false;
+//             break;
+
+//         case NONE:
+//             break;
         
-        case RIGHT: //RIGHT
-            maze[c.x+1][c.y].walls[LEFT] = false;
-            break;
+//         default:
+//             break;
+//     }
+//     // // Open wall current cell TO direction
+//     // maze[c.x][c.y].walls[dir] = false;
+
+//     // // Open wall next cell FROM direction
+//     // switch(dir){
+//     //     case UP: //UP
+//     //         maze[c.x][c.y-1].walls[DOWN] = false;
+//     //         break;
         
-        case DOWN: //DOWN
-            maze[c.x][c.y+1].walls[UP] = false;
-            break;
+//     //     case RIGHT: //RIGHT
+//     //         maze[c.x+1][c.y].walls[LEFT] = false;
+//     //         break;
         
-        case LEFT: //LEFT
-            maze[c.x-1][c.y].walls[RIGHT] = false;
-            break;
+//     //     case DOWN: //DOWN
+//     //         maze[c.x][c.y+1].walls[UP] = false;
+//     //         break;
         
-        default:
-            break;
-    }
-}
+//     //     case LEFT: //LEFT
+//     //         maze[c.x-1][c.y].walls[RIGHT] = false;
+//     //         break;
+        
+//     //     default:
+//     //         break;
+//     // }
+// }
 
-void MazeController::GenerateRandomMaze(Cell current_cell){
-    current_cell.visited_cells.push_back(maze[current_cell.x][current_cell.y]);
-    while(current_cell.HasNonVisitedNeighbours()){
-        DIRECTION next_dir = current_cell.SelectRandomPossibleDirection();
-        UpdateCellWalls(current_cell, next_dir);
-        Cell next_cell = current_cell.GetNextCell(next_dir);
-        // DisplayVisitedCells();
-        GenerateRandomMaze(maze[next_cell.x][next_cell.y]);
-    }
-    
-}
-
-
-// int main() {
-//     // Initialize SDL
-//     SDL_Init(SDL_INIT_VIDEO);
-    
-//     // Create an SDL window and renderer
-//     SDL_Window* window = SDL_CreateWindow("SDL Grid", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH+1, WINDOW_HEIGHT+1, SDL_WINDOW_SHOWN);
-//     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    
-//     // Clear the renderer
-//     SDL_RenderClear(renderer);
-    
-//     MazeController* maze_controller = new MazeController();
-
-//     bool walls[4] = {true,true,true,true};
-//     Cell initial_cell(0, 0, walls);
-//     maze_controller->GenerateRandomMaze(initial_cell);
-
-//     // Cell **maze = new Cell*[GRID_WIDTH];
-//     // InitializeMaze(maze);
-//     // GenerateRandomMaze(maze, maze[0][0]);
-
-//     std::cout << "Maze generated" << std::endl;
-
-//     DrawGrid(renderer, maze_controller->GetMaze());
-
-    
-//     // Wait for a key press to exit
-//     bool quit = false;
-//     SDL_Event event;
-//     while (!quit) {
-//         while (SDL_PollEvent(&event)) {
-//             if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN) {
-//                 quit = true;
-//             }
-//         }
+// void MazeController::GenerateRandomMaze(Cell* current_cell){
+//     current_cell->visited_cells.push_back(maze[current_cell->x][current_cell->y]);
+//     while(current_cell->HasNonVisitedNeighbours()){
+//         DIRECTION next_dir = current_cell.SelectRandomPossibleDirection();
+//         UpdateCellWalls(current_cell, next_dir);
+//         Cell next_cell = current_cell.GetNextCell(next_dir);
+//         // DisplayVisitedCells();
+//         GenerateRandomMaze(maze[next_cell.x][next_cell.y]);
 //     }
     
-//     delete maze_controller;
-
-//     // Cleanup and quit SDL
-//     // for(int i = 0; i < GRID_WIDTH; i++){
-//     //     delete [] maze[i];
-//     // }
-//     // delete [] maze;
-
-//     SDL_DestroyRenderer(renderer);
-//     SDL_DestroyWindow(window);
-//     SDL_Quit();
-    
-//     return 0;
 // }
+

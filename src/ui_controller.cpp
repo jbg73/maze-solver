@@ -36,9 +36,9 @@ void UIController::DrawGrid(Cell** maze) const{
 
 }
 
-void UIController::PaintCell(Cell c, int r, int g, int b) const{
+void UIController::PaintCell(Cell* c, int r, int g, int b) const{
     SDL_SetRenderDrawColor(renderer, r, g, b, 255);
-    SDL_Rect rect = {c.x * (CELL_SIZE), c.y * (CELL_SIZE), CELL_SIZE-1, CELL_SIZE-1};
+    SDL_Rect rect = {c->x * (CELL_SIZE), c->y * (CELL_SIZE), CELL_SIZE-1, CELL_SIZE-1};
     SDL_RenderFillRect(renderer, &rect);
 }
 
@@ -46,15 +46,15 @@ void UIController::ShowWindow() const{
     SDL_RenderPresent(renderer);
 }
 
-void UIController::ShowPath(std::vector<Cell> visited_cells, Cell** maze){
+void UIController::ShowPath(std::vector<Cell*> visited_cells, Cell** maze){
     SDL_SetRenderDrawColor(renderer, 255, 155, 0, 255);
     for(auto c : visited_cells){
-        SDL_Rect rect = {c.x * (CELL_SIZE), c.y * (CELL_SIZE), CELL_SIZE, CELL_SIZE};
+        SDL_Rect rect = {c->x * (CELL_SIZE), c->y * (CELL_SIZE), CELL_SIZE, CELL_SIZE};
         SDL_RenderFillRect(renderer, &rect);
     }
-    Cell current_cell = visited_cells[visited_cells.size()-1];
+    Cell* current_cell = visited_cells[visited_cells.size()-1];
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    SDL_Rect rect = {current_cell.x * (CELL_SIZE), current_cell.y * (CELL_SIZE), CELL_SIZE, CELL_SIZE};
+    SDL_Rect rect = {current_cell->x * (CELL_SIZE), current_cell->y * (CELL_SIZE), CELL_SIZE, CELL_SIZE};
     SDL_RenderFillRect(renderer, &rect);
     
     DrawGrid(maze);

@@ -18,7 +18,7 @@ public:
     virtual ~MazeController(); // Review Destructors
 
     Cell** GetMaze() const{return maze;}
-    void GenerateRandomMaze(Cell current_cell);
+    // void GenerateRandomMaze(Cell current_cell);
 
 private:
 

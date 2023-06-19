@@ -9,24 +9,21 @@ int main(){
 
     MazeController* maze_controller = new MazeController();
 
-    maze_controller->GenerateRandomMaze(maze_controller->GetMaze()[0][0]);
 
-    std::cout << "Maze generated" << std::endl;
-    maze_controller->GetMaze()[0][0].ClearVisitedCells();
-    
-
-    ui_controller->DrawGrid(maze_controller->GetMaze());
+    Cell** maze = maze_controller->GetMaze();
+    std::cout << "maze dir: " << maze << std::endl;
+    Algorithms *algorithm_controller = new Algorithms(maze, *ui_controller);
+    algorithm_controller->GenerateRandomMaze(&maze[0][0]);
+    algorithm_controller->ClearVisitedCells();
+    std::cout << "alg::maze dir: " << algorithm_controller->GetMaze() << std::endl;
+    ui_controller->DrawGrid(algorithm_controller->GetMaze());
     SDL_RenderPresent(ui_controller->GetRenderer());
-    // std::string a;
-    // // getline (std::cin, a);
-    // getline(std::cin);
-    // std::cin.get();
+
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    Algorithms algorithm_controller(*maze_controller, *ui_controller); //TODO: Why do I need *
 
-    algorithm_controller.SetStartTime();
+    algorithm_controller->SetStartTime();
 
-    algorithm_controller.BruteForce(maze_controller->GetMaze()[0][0]);
+    algorithm_controller->BruteForce(&maze[0][0]);
     std::cout << "Solved Brute Force" << std::endl;
     ui_controller->DrawGrid(maze_controller->GetMaze());
     // algorithm_controller.SolveA_Star(maze_controller->GetMaze()[20][20]);

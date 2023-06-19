@@ -12,7 +12,7 @@ struct Cell{
     int x;
     int y;
     bool walls[4];
-    static std::vector<Cell> visited_cells;
+    std::vector<DIRECTION> visited_neighbours;
 
     Cell() : x{0}, y{0}, walls{true,true,true,true}{}
     Cell(int x_val, int y_val, bool walls_vals[4]) : x{x_val}, y{y_val}{
@@ -21,13 +21,16 @@ struct Cell{
         }
     }
 
-    void ClearVisitedCells(){visited_cells.clear();}
-    bool IsCellVisited() const;
-    bool IsCellVisited(DIRECTION dir) const;
-    bool IsCellVisited(int pos_x, int pos_y) const;
+    // void ClearVisitedCells(){visited_cells.clear();}
+    // bool IsCellVisited() const;
+    // bool IsCellVisited(DIRECTION dir) const;
+    // bool IsCellVisited(int pos_x, int pos_y) const;
     bool HasNonVisitedNeighbours() const;
-    DIRECTION SelectRandomPossibleDirection() const;
-    Cell GetNextCell(DIRECTION dir) const;
+    bool HasLegalNonVisitedNeighbours() const;
+    bool IsNeighbourVisited(DIRECTION dir) const;
+    void UpdateVisitedNeighbours(DIRECTION dir);
+    // DIRECTION SelectRandomPossibleDirection() const;
+    // Cell GetNextCell(DIRECTION dir) const;
     std::vector<std::pair<int,int>> GetCellEdges() const;
 };
 
