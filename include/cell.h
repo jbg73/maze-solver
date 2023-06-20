@@ -21,16 +21,10 @@ struct Cell{
         }
     }
 
-    // void ClearVisitedCells(){visited_cells.clear();}
-    // bool IsCellVisited() const;
-    // bool IsCellVisited(DIRECTION dir) const;
-    // bool IsCellVisited(int pos_x, int pos_y) const;
     bool HasNonVisitedNeighbours() const;
     bool HasLegalNonVisitedNeighbours() const;
     bool IsNeighbourVisited(DIRECTION dir) const;
     void UpdateVisitedNeighbours(DIRECTION dir);
-    // DIRECTION SelectRandomPossibleDirection() const;
-    // Cell GetNextCell(DIRECTION dir) const;
     std::vector<std::pair<int,int>> GetCellEdges() const;
 };
 
