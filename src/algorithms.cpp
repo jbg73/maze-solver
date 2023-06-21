@@ -110,10 +110,10 @@ void Algorithms::GenerateRandomMaze(Cell* current_cell){
 
 void Algorithms::BruteForce(Cell* current_cell){
     visited_cells.push_back(current_cell);
-    maze_controller.ShowPath(visited_cells, maze);
+    maze_controller.ShowPath(visited_cells);
     // ui_controller.PaintCell(current_cell);
     // SDL_RenderPresent(ui_controller.GetRenderer());
-    SDL_Delay(1);
+    SDL_Delay(150);
     if(current_cell->x == GRID_WIDTH-1 && current_cell->y == GRID_HEIGHT-1){
         std::cout << "Found last cell" << std::endl;
         maze_controller.PaintCell(current_cell, 255,0,0);

@@ -34,7 +34,7 @@ void MazeController::InitializeUI(){
 }
 
 
-void MazeController::DrawGrid(Cell** maze) const{
+void MazeController::DrawGrid() const{
     // Set the color for drawing walls
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // White color
     
@@ -62,7 +62,7 @@ void MazeController::ShowWindow() const{
     SDL_RenderPresent(renderer);
 }
 
-void MazeController::ShowPath(std::vector<Cell*> visited_cells, Cell** maze){
+void MazeController::ShowPath(std::vector<Cell*> visited_cells) const{
     SDL_SetRenderDrawColor(renderer, 255, 155, 0, 255);
     for(auto c : visited_cells){
         SDL_Rect rect = {c->x * (CELL_SIZE), c->y * (CELL_SIZE), CELL_SIZE, CELL_SIZE};
@@ -73,7 +73,7 @@ void MazeController::ShowPath(std::vector<Cell*> visited_cells, Cell** maze){
     SDL_Rect rect = {current_cell->x * (CELL_SIZE), current_cell->y * (CELL_SIZE), CELL_SIZE, CELL_SIZE};
     SDL_RenderFillRect(renderer, &rect);
     
-    DrawGrid(maze);
+    DrawGrid();
 
     SDL_RenderPresent(renderer);
 }
