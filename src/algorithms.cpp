@@ -1,9 +1,10 @@
 #include <algorithms.h>
 #include <globals.h>
 
-Algorithms::Algorithms(Cell **maze_ref, UIController& ui_controller_ref) : ui_controller{ui_controller_ref}
+Algorithms::Algorithms(Cell **maze_ref, MazeController& maze_controller_ref) : maze_controller{maze_controller_ref}
 {
     maze = maze_ref;
+    std::cout << "maze controller alg: " << &maze_controller << std::endl;
 }
 
 Algorithms::~Algorithms(){
@@ -109,14 +110,14 @@ void Algorithms::GenerateRandomMaze(Cell* current_cell){
 
 void Algorithms::BruteForce(Cell* current_cell){
     visited_cells.push_back(current_cell);
-    ui_controller.ShowPath(visited_cells, maze);
+    maze_controller.ShowPath(visited_cells, maze);
     // ui_controller.PaintCell(current_cell);
     // SDL_RenderPresent(ui_controller.GetRenderer());
     SDL_Delay(1);
     if(current_cell->x == GRID_WIDTH-1 && current_cell->y == GRID_HEIGHT-1){
         std::cout << "Found last cell" << std::endl;
-        ui_controller.PaintCell(current_cell, 255,0,0);
-        SDL_RenderPresent(ui_controller.GetRenderer());
+        maze_controller.PaintCell(current_cell, 255,0,0);
+        SDL_RenderPresent(maze_controller.GetRenderer());
         SDL_Delay(5);
         // visited_cells.pop_back();
         solved = true;
@@ -124,12 +125,12 @@ void Algorithms::BruteForce(Cell* current_cell){
     }
     
     else{
-        while(current_cell->HasLegalNonVisitedNeighbours() && !solved){
+        while(current_cell->HasAvailableConnections() && !solved){
             DIRECTION next_dir = SelectRandomPossibleDirection(current_cell);
             if(next_dir != NONE){
                 Cell* next_cell = GetNextCell(current_cell, next_dir);
                 current_cell->visited_neighbours.push_back(next_dir);
-                next_cell->UpdateVisitedNeighbours(next_dir);
+                next_cell->UpdateNextCellVisitedNeighbours(next_dir);
                 BruteForce(next_cell);
             }
         }

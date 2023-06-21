@@ -2,7 +2,6 @@
 #define MAZE_SOLVER_ALGOTITHMS_H
 
 #include <maze_controller.h>
-#include <ui_controller.h>
 #include <ctime>
 #include <chrono>
 
@@ -10,7 +9,7 @@ class Algorithms{
 
 public:
     Algorithms() = delete;
-    Algorithms(Cell **maze_ref, UIController& renderer_ref);
+    Algorithms(Cell **maze_ref, MazeController& maze_controller_ref);
     // Algorithms(const MazeController& maze_ref, UIController& renderer_ref);
     ~Algorithms();
 
@@ -30,7 +29,7 @@ private:
     void UpdateCellWalls(Cell* cell, DIRECTION dir);
     std::vector<Cell*> visited_cells;
     Cell** maze; 
-    UIController& ui_controller;
+    MazeController& maze_controller;
     std::chrono::time_point<std::chrono::high_resolution_clock> start_time;
     std::chrono::time_point<std::chrono::high_resolution_clock> actual_time;
     bool solved = false;

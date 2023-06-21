@@ -13,7 +13,7 @@ bool Cell::HasNonVisitedNeighbours() const{
     return false;
 }
 
-void Cell::UpdateVisitedNeighbours(DIRECTION dir){
+void Cell::UpdateNextCellVisitedNeighbours(DIRECTION dir){
     switch (dir)
     {
     case UP:
@@ -37,16 +37,16 @@ void Cell::UpdateVisitedNeighbours(DIRECTION dir){
     }
 }
 
-bool Cell::IsNeighbourVisited(DIRECTION dir) const{
+bool Cell::IsDirectionVisited(DIRECTION dir) const{
     for(int i = 0; i < visited_neighbours.size(); i++){
         if(visited_neighbours[i] == dir) return true;
     }
     return false;
 }
 
-bool Cell::HasLegalNonVisitedNeighbours() const{
+bool Cell::HasAvailableConnections() const{
     for(int i = 0; i < 4; i++){
-        if(walls[i] == false && !IsNeighbourVisited(static_cast<DIRECTION>(i))){
+        if(walls[i] == false && !IsDirectionVisited(static_cast<DIRECTION>(i))){
             return true;
         }
     }
