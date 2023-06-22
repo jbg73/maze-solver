@@ -47,9 +47,9 @@ public:
      */
     Cell** GetMaze() {return maze;}
     /**
-     * @brief Clears the visited_cells vector
+     * @brief Clears the current_path vector
      */
-    void ClearVisitedCells(){visited_cells.clear();}
+    void ClearVisitedCells(){current_path.clear();}
 
 private:
 
@@ -80,7 +80,7 @@ private:
     /**
      * @brief vector of current visited cells
      */
-    std::vector<Cell*> visited_cells;
+    std::vector<Cell*> current_path;
     /**
      * @brief The maze
      */

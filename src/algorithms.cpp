@@ -13,8 +13,8 @@ Algorithms::~Algorithms(){
 }
 
 bool Algorithms::IsVisited(Cell* cell) const{
-    for(int i = 0; i < visited_cells.size(); i++){
-        if(visited_cells[i]->x == cell->x && visited_cells[i]->y == cell->y)
+    for(int i = 0; i < current_path.size(); i++){
+        if(current_path[i]->x == cell->x && current_path[i]->y == cell->y)
             return true;
     }
     return false;
@@ -78,7 +78,7 @@ Cell* Algorithms::GetNextCell(Cell* current_cell, DIRECTION dir){
 }
 
 void Algorithms::GenerateRandomMaze(Cell* current_cell){
-    visited_cells.push_back(current_cell);
+    current_path.push_back(current_cell);
     // current_cell->visited_neighbours.push_back(maze[current_cell->x][current_cell->y]);
     while(current_cell->HasNonVisitedNeighbours()){
         DIRECTION next_dir = SelectRandomPossibleDirectionGenerating(current_cell);
@@ -109,17 +109,14 @@ void Algorithms::GenerateRandomMaze(Cell* current_cell){
 // }
 
 void Algorithms::BruteForce(Cell* current_cell){
-    visited_cells.push_back(current_cell);
-    maze_controller.ShowPath(visited_cells);
-    // ui_controller.PaintCell(current_cell);
-    // SDL_RenderPresent(ui_controller.GetRenderer());
+    current_path.push_back(current_cell);
+    maze_controller.ShowPath(current_path);
     SDL_Delay(150);
     if(current_cell->x == GRID_WIDTH-1 && current_cell->y == GRID_HEIGHT-1){
         std::cout << "Found last cell" << std::endl;
         maze_controller.PaintCell(current_cell, 255,0,0);
         SDL_RenderPresent(maze_controller.GetRenderer());
         SDL_Delay(5);
-        // visited_cells.pop_back();
         solved = true;
         return;
     }
@@ -133,6 +130,7 @@ void Algorithms::BruteForce(Cell* current_cell){
                 next_cell->UpdateNextCellVisitedNeighbours(next_dir);
                 BruteForce(next_cell);
             }
+            current_path.pop_back();
         }
     }
 

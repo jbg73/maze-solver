@@ -54,7 +54,7 @@ void MazeController::DrawGrid() const{
 
 void MazeController::PaintCell(Cell* c, int r, int g, int b) const{
     SDL_SetRenderDrawColor(renderer, r, g, b, 255);
-    SDL_Rect rect = {c->x * (CELL_SIZE), c->y * (CELL_SIZE), CELL_SIZE-1, CELL_SIZE-1};
+    SDL_Rect rect = {c->x * (CELL_SIZE), c->y * (CELL_SIZE), CELL_SIZE, CELL_SIZE};
     SDL_RenderFillRect(renderer, &rect);
 }
 
@@ -63,6 +63,11 @@ void MazeController::ShowWindow() const{
 }
 
 void MazeController::ShowPath(std::vector<Cell*> visited_cells) const{
+    for(int i = 0; i < GRID_WIDTH; i++){
+        for(int j = 0; j < GRID_HEIGHT; j++){
+            PaintCell(&maze[i][j], 0, 0, 0);
+        }
+    }
     SDL_SetRenderDrawColor(renderer, 255, 155, 0, 255);
     for(auto c : visited_cells){
         SDL_Rect rect = {c->x * (CELL_SIZE), c->y * (CELL_SIZE), CELL_SIZE, CELL_SIZE};
