@@ -4,12 +4,24 @@
 /************************************************************************
  * Global Variables Definition 
  ***********************************************************************/
-const int WINDOW_WIDTH = 800;
-const int WINDOW_HEIGHT = 800;
-const int CELL_SIZE = 5;
-const int GRID_WIDTH = WINDOW_WIDTH / CELL_SIZE;
-const int GRID_HEIGHT = WINDOW_HEIGHT / CELL_SIZE;
+namespace globals
+{
+    const int WINDOW_WIDTH = 800;
+    const int WINDOW_HEIGHT = 800;
+    const int CELL_SIZE = 5;
+    const int GRID_WIDTH = WINDOW_WIDTH / CELL_SIZE;
+    const int GRID_HEIGHT = WINDOW_HEIGHT / CELL_SIZE;
 
-enum DIRECTION {UP, RIGHT, DOWN, LEFT, NONE};
+    enum DIRECTION
+    {
+        UP,
+        RIGHT,
+        DOWN,
+        LEFT,
+        NONE
+    };
+
+    bool KILLED = false;
+}
 
 #endif

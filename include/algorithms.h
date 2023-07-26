@@ -69,17 +69,17 @@ private:
      * @param dir direction in which we move
      * @return cell reference from the maze 
      */
-    Cell* GetNextCell(Cell* current_cell, DIRECTION dir);
+    Cell* GetNextCell(Cell* current_cell, globals::DIRECTION dir);
     
-    DIRECTION SelectRandomPossibleDirection(Cell* current_cell);
-    DIRECTION SelectRandomPossibleDirectionGenerating(Cell* current_cell);
+    globals::DIRECTION SelectRandomPossibleDirection(Cell* current_cell);
+    globals::DIRECTION SelectRandomPossibleDirectionGenerating(Cell* current_cell);
     /**
      * @brief Updates the cell walls from the current cell and from the cell that results from going from current cell in the direction received
-     * @details if going UP from current cell, ir updates its UP wall and the next cell updates its DOWN wall
+     * @details if going globals::UP from current cell, ir updates its globals::UP wall and the next cell updates its globals::DOWN wall
      * @param cell Cell from which the movement is executed
      * @param dir Direction in which we move from current cell
      */
-    void UpdateCellWalls(Cell* cell, DIRECTION dir);
+    void UpdateCellWalls(Cell* cell, globals::DIRECTION dir);
 
     std::vector<Cell*> GetPossibleNeighbours(Cell* current_cell);
     int ManhattanDistance(Cell* curent_cell);

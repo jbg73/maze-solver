@@ -28,7 +28,7 @@ struct Cell{
     /**
      * @brief vector contained the directions that the cell has visited
      */
-    std::vector<DIRECTION> visited_neighbours;
+    std::vector<globals::DIRECTION> visited_neighbours;
     
     /**
      * @brief Construct a new Cell object
@@ -71,13 +71,13 @@ struct Cell{
      * @return true if neighbour has been visited
      * @return false elsewhere
      */
-    bool IsDirectionVisited(DIRECTION dir) const;
+    bool IsDirectionVisited(globals::DIRECTION dir) const;
     /**
      * @brief Updates the list of visited neighbours based on the direction received.
-     * @attention The direction stored is the opposite to the received, i.e. if moving UP, next cell will have its DOWN direction already visited
+     * @attention The direction stored is the opposite to the received, i.e. if moving globals::UP, next cell will have its globals::DOWN direction already visited
      * @param dir direction from which we arrive to the cell
      */
-    void UpdateNextCellVisitedNeighbours(DIRECTION dir);
+    void UpdateNextCellVisitedNeighbours(globals::DIRECTION dir);
     /**
      * @brief Get the Cell Edges 
      * @details As cells are displayed as squares, having all 4 edges coordinates is useful to draw the canvas

@@ -2,11 +2,11 @@
 
 
 MazeController::MazeController(){
-    maze = new Cell*[GRID_WIDTH];
+    maze = new Cell*[globals::GRID_WIDTH];
     bool init_walls[4] = {true, true, true, true};
-    for(int i = 0; i < GRID_WIDTH; i++){
-        maze[i] = new Cell[GRID_HEIGHT];
-        for(int j = 0; j < GRID_HEIGHT; j++){
+    for(int i = 0; i < globals::GRID_WIDTH; i++){
+        maze[i] = new Cell[globals::GRID_HEIGHT];
+        for(int j = 0; j < globals::GRID_HEIGHT; j++){
             maze[i][j] = Cell(i,j,init_walls);
         }
     }
@@ -17,7 +17,7 @@ MazeController::MazeController(){
 
 
 MazeController::~MazeController(){
-    for(int i = 0; i < GRID_WIDTH; i++){
+    for(int i = 0; i < globals::GRID_WIDTH; i++){
         delete [] maze[i];
     }
     delete [] maze;
@@ -28,7 +28,7 @@ MazeController::~MazeController(){
 }
 
 void MazeController::InitializeUI(){
-    window = SDL_CreateWindow("Maze Solver", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH+1, WINDOW_HEIGHT+1, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("Maze Solver", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, globals::WINDOW_WIDTH+1, globals::WINDOW_HEIGHT+1, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     SDL_RenderClear(renderer);
 }
@@ -40,8 +40,8 @@ void MazeController::DrawGrid() const{
     
     std::vector<std::pair<int, int>> cell_edges(4);
 
-    for(int i = 0; i < GRID_WIDTH; i++){
-        for(int j = 0; j < GRID_HEIGHT; j++){
+    for(int i = 0; i < globals::GRID_WIDTH; i++){
+        for(int j = 0; j < globals::GRID_HEIGHT; j++){
             cell_edges = maze[i][j].GetCellEdges();
             if(maze[i][j].walls[0]) SDL_RenderDrawLine(renderer, cell_edges[0].first, cell_edges[0].second, cell_edges[1].first, cell_edges[1].second);
             if(maze[i][j].walls[1]) SDL_RenderDrawLine(renderer, cell_edges[1].first, cell_edges[1].second, cell_edges[2].first, cell_edges[2].second);
@@ -54,7 +54,7 @@ void MazeController::DrawGrid() const{
 
 void MazeController::PaintCell(Cell* c, int r, int g, int b) const{
     SDL_SetRenderDrawColor(renderer, r, g, b, 255);
-    SDL_Rect rect = {c->x * (CELL_SIZE), c->y * (CELL_SIZE), CELL_SIZE, CELL_SIZE};
+    SDL_Rect rect = {c->x * (globals::CELL_SIZE), c->y * (globals::CELL_SIZE), globals::CELL_SIZE, globals::CELL_SIZE};
     SDL_RenderFillRect(renderer, &rect);
 }
 
@@ -63,19 +63,19 @@ void MazeController::ShowWindow() const{
 }
 
 void MazeController::ShowPath(std::vector<Cell*> visited_cells) const{
-    for(int i = 0; i < GRID_WIDTH; i++){
-        for(int j = 0; j < GRID_HEIGHT; j++){
+    for(int i = 0; i < globals::GRID_WIDTH; i++){
+        for(int j = 0; j < globals::GRID_HEIGHT; j++){
             PaintCell(&maze[i][j], 0, 0, 0);
         }
     }
     SDL_SetRenderDrawColor(renderer, 255, 155, 0, 255);
     for(auto c : visited_cells){
-        SDL_Rect rect = {c->x * (CELL_SIZE), c->y * (CELL_SIZE), CELL_SIZE, CELL_SIZE};
+        SDL_Rect rect = {c->x * (globals::CELL_SIZE), c->y * (globals::CELL_SIZE), globals::CELL_SIZE, globals::CELL_SIZE};
         SDL_RenderFillRect(renderer, &rect);
     }
     Cell* current_cell = visited_cells[visited_cells.size()-1];
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    SDL_Rect rect = {current_cell->x * (CELL_SIZE), current_cell->y * (CELL_SIZE), CELL_SIZE, CELL_SIZE};
+    SDL_Rect rect = {current_cell->x * (globals::CELL_SIZE), current_cell->y * (globals::CELL_SIZE), globals::CELL_SIZE, globals::CELL_SIZE};
     SDL_RenderFillRect(renderer, &rect);
     
     DrawGrid();

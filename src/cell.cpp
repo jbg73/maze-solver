@@ -13,23 +13,23 @@ bool Cell::HasNonVisitedNeighbours() const{
     return false;
 }
 
-void Cell::UpdateNextCellVisitedNeighbours(DIRECTION dir){
+void Cell::UpdateNextCellVisitedNeighbours(globals::DIRECTION dir){
     switch (dir)
     {
-    case UP:
-        visited_neighbours.push_back(DOWN);
+    case globals::UP:
+        visited_neighbours.push_back(globals::DOWN);
         break;
     
-    case RIGHT:
-        visited_neighbours.push_back(LEFT);
+    case globals::RIGHT:
+        visited_neighbours.push_back(globals::LEFT);
         break;
 
-    case DOWN:
-        visited_neighbours.push_back(UP);
+    case globals::DOWN:
+        visited_neighbours.push_back(globals::UP);
         break;
 
-    case LEFT:
-        visited_neighbours.push_back(RIGHT);
+    case globals::LEFT:
+        visited_neighbours.push_back(globals::RIGHT);
         break;
 
     default:
@@ -37,7 +37,7 @@ void Cell::UpdateNextCellVisitedNeighbours(DIRECTION dir){
     }
 }
 
-bool Cell::IsDirectionVisited(DIRECTION dir) const{
+bool Cell::IsDirectionVisited(globals::DIRECTION dir) const{
     for(int i = 0; i < visited_neighbours.size(); i++){
         if(visited_neighbours[i] == dir) return true;
     }
@@ -46,7 +46,7 @@ bool Cell::IsDirectionVisited(DIRECTION dir) const{
 
 bool Cell::HasAvailableConnections() const{
     for(int i = 0; i < 4; i++){
-        if(walls[i] == false && !IsDirectionVisited(static_cast<DIRECTION>(i))){
+        if(walls[i] == false && !IsDirectionVisited(static_cast<globals::DIRECTION>(i))){
             return true;
         }
     }
@@ -57,10 +57,10 @@ bool Cell::HasAvailableConnections() const{
 std::vector<std::pair<int,int>> Cell::GetCellEdges() const{
     std::vector<std::pair<int,int>> cell_edges(4);
 
-    cell_edges[0] = std::make_pair(x*CELL_SIZE, y*CELL_SIZE); // top left
-    cell_edges[1] = std::make_pair((x+1)*CELL_SIZE, y*CELL_SIZE); // top right
-    cell_edges[2] = std::make_pair((x+1)*CELL_SIZE, (y+1)*CELL_SIZE); // bottom right
-    cell_edges[3] = std::make_pair(x*CELL_SIZE, (y+1)*CELL_SIZE); // bottom left
+    cell_edges[0] = std::make_pair(x*globals::CELL_SIZE, y*globals::CELL_SIZE); // top left
+    cell_edges[1] = std::make_pair((x+1)*globals::CELL_SIZE, y*globals::CELL_SIZE); // top right
+    cell_edges[2] = std::make_pair((x+1)*globals::CELL_SIZE, (y+1)*globals::CELL_SIZE); // bottom right
+    cell_edges[3] = std::make_pair(x*globals::CELL_SIZE, (y+1)*globals::CELL_SIZE); // bottom left
 
     return cell_edges;
 }

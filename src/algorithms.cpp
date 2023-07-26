@@ -23,31 +23,31 @@ bool Algorithms::IsVisited(Cell *cell) const
     return false;
 }
 
-void Algorithms::UpdateCellWalls(Cell *c, DIRECTION dir)
+void Algorithms::UpdateCellWalls(Cell *c, globals::DIRECTION dir)
 {
     switch (dir)
     {
-    case UP:
-        c->walls[UP] = false;
-        maze[c->x][c->y - 1].walls[DOWN] = false;
+    case globals::UP:
+        c->walls[globals::UP] = false;
+        maze[c->x][c->y - 1].walls[globals::DOWN] = false;
         break;
 
-    case RIGHT:
-        c->walls[RIGHT] = false;
-        maze[c->x + 1][c->y].walls[LEFT] = false;
+    case globals::RIGHT:
+        c->walls[globals::RIGHT] = false;
+        maze[c->x + 1][c->y].walls[globals::LEFT] = false;
         break;
 
-    case DOWN:
-        c->walls[DOWN] = false;
-        maze[c->x][c->y + 1].walls[UP] = false;
+    case globals::DOWN:
+        c->walls[globals::DOWN] = false;
+        maze[c->x][c->y + 1].walls[globals::UP] = false;
         break;
 
-    case LEFT:
-        c->walls[LEFT] = false;
-        maze[c->x - 1][c->y].walls[RIGHT] = false;
+    case globals::LEFT:
+        c->walls[globals::LEFT] = false;
+        maze[c->x - 1][c->y].walls[globals::RIGHT] = false;
         break;
 
-    case NONE:
+    case globals::NONE:
         break;
 
     default:
@@ -55,27 +55,27 @@ void Algorithms::UpdateCellWalls(Cell *c, DIRECTION dir)
     }
 }
 
-Cell *Algorithms::GetNextCell(Cell *current_cell, DIRECTION dir)
+Cell *Algorithms::GetNextCell(Cell *current_cell, globals::DIRECTION dir)
 {
     switch (dir)
     {
-    case UP:
+    case globals::UP:
         return &maze[current_cell->x][current_cell->y - 1];
         break;
 
-    case RIGHT:
+    case globals::RIGHT:
         return &maze[current_cell->x + 1][current_cell->y];
         break;
 
-    case DOWN:
+    case globals::DOWN:
         return &maze[current_cell->x][current_cell->y + 1];
         break;
 
-    case LEFT:
+    case globals::LEFT:
         return &maze[current_cell->x - 1][current_cell->y];
         break;
 
-    case NONE:
+    case globals::NONE:
         break;
 
     default:
@@ -90,8 +90,8 @@ void Algorithms::GenerateRandomMaze(Cell *current_cell)
     // current_cell->visited_neighbours.push_back(maze[current_cell->x][current_cell->y]);
     while (current_cell->HasNonVisitedNeighbours())
     {
-        DIRECTION next_dir = SelectRandomPossibleDirectionGenerating(current_cell);
-        if (next_dir == NONE)
+        globals::DIRECTION next_dir = SelectRandomPossibleDirectionGenerating(current_cell);
+        if (next_dir == globals::NONE)
             return;
         UpdateCellWalls(current_cell, next_dir);
         // Cell next_cell = current_cell.GetNextCell(next_dir);
@@ -110,7 +110,7 @@ void Algorithms::GenerateRandomMaze(Cell *current_cell)
 //     if(std::chrono::duration_cast<std::chrono::milliseconds>(actual_time - start_time).count() > 5000) return;
 //     else{
 //         int v1 = rand() % 4;
-//         Cell next_cell = current_cell.GetNextCell(static_cast<DIRECTION>(v1));
+//         Cell next_cell = current_cell.GetNextCell(static_cast<globals::DIRECTION>(v1));
 //         SolveA_Star(next_cell);
 
 //     }
@@ -122,7 +122,7 @@ void Algorithms::BruteForce(Cell *current_cell)
     current_path.push_back(current_cell);
     maze_controller.ShowPath(current_path);
     SDL_Delay(150);
-    if (current_cell->x == GRID_WIDTH - 1 && current_cell->y == GRID_HEIGHT - 1)
+    if (current_cell->x == globals::GRID_WIDTH - 1 && current_cell->y == globals::GRID_HEIGHT - 1)
     {
         std::cout << "Found last cell" << std::endl;
         maze_controller.PaintCell(current_cell, 255, 0, 0);
@@ -136,8 +136,8 @@ void Algorithms::BruteForce(Cell *current_cell)
     {
         while (current_cell->HasAvailableConnections() && !solved)
         {
-            DIRECTION next_dir = SelectRandomPossibleDirection(current_cell);
-            if (next_dir != NONE)
+            globals::DIRECTION next_dir = SelectRandomPossibleDirection(current_cell);
+            if (next_dir != globals::NONE)
             {
                 Cell *next_cell = GetNextCell(current_cell, next_dir);
                 current_cell->visited_neighbours.push_back(next_dir);
@@ -163,7 +163,7 @@ void Algorithms::AStar(Cell *current_cell)
         {
             if (current_cell->local_dist + 1 < neighbour->local_dist)
             {
-                if ((neighbour->x * CELL_SIZE) != GRID_WIDTH - 1 && (neighbour->y * CELL_SIZE) != GRID_HEIGHT - 1)
+                if ((neighbour->x * globals::CELL_SIZE) != globals::GRID_WIDTH - 1 && (neighbour->y * globals::CELL_SIZE) != globals::GRID_HEIGHT - 1)
                 {
                     cells_to_test.push_back(neighbour);
                 }
@@ -179,7 +179,7 @@ void Algorithms::AStar(Cell *current_cell)
     }
     
     std::cout << "-----------------------------------------------------------------" << std::endl;
-    Cell* aux = &maze[GRID_WIDTH-1][GRID_HEIGHT-1];
+    Cell* aux = &maze[globals::GRID_WIDTH-1][globals::GRID_HEIGHT-1];
     while(aux->x != 0 || aux->y != 0)
     {
         std::cout << aux->x << "-" << aux->y << std::endl;
@@ -194,9 +194,9 @@ void Algorithms::AStar(Cell *current_cell)
 
 void Algorithms::InitializeAStar()
 {
-    for (int i = 0; i < GRID_WIDTH; i++)
+    for (int i = 0; i < globals::GRID_WIDTH; i++)
     {
-        for (int j = 0; j < GRID_HEIGHT; j++)
+        for (int j = 0; j < globals::GRID_HEIGHT; j++)
         {
             maze[i][j].local_dist = INT32_MAX;
             maze[i][j].global_dist = INT32_MAX;
@@ -208,55 +208,55 @@ void Algorithms::InitializeAStar()
 
 int Algorithms::ManhattanDistance(Cell *current_cell)
 {
-    return abs((current_cell->x * CELL_SIZE) - GRID_WIDTH) + abs((current_cell->y * CELL_SIZE) - GRID_HEIGHT);
+    return abs((current_cell->x * globals::CELL_SIZE) - globals::GRID_WIDTH) + abs((current_cell->y * globals::CELL_SIZE) - globals::GRID_HEIGHT);
 }
 
 std::vector<Cell *> Algorithms::GetPossibleNeighbours(Cell *current_cell)
 {
     std::vector<Cell *> neighbours;
-    // Check UP
-    if (current_cell->y - 1 >= 0 && !current_cell->walls[UP])
+    // Check globals::UP
+    if (current_cell->y - 1 >= 0 && !current_cell->walls[globals::UP])
     {
-        neighbours.push_back(GetNextCell(current_cell, UP));
+        neighbours.push_back(GetNextCell(current_cell, globals::UP));
     }
-    // Check RIGHT
-    if (current_cell->x + 1 < GRID_WIDTH && !current_cell->walls[RIGHT])
+    // Check globals::RIGHT
+    if (current_cell->x + 1 < globals::GRID_WIDTH && !current_cell->walls[globals::RIGHT])
     {
-        neighbours.push_back(GetNextCell(current_cell, RIGHT));
+        neighbours.push_back(GetNextCell(current_cell, globals::RIGHT));
     }
-    // Check DOWN
-    if (current_cell->y + 1 < GRID_HEIGHT && !current_cell->walls[DOWN])
+    // Check globals::DOWN
+    if (current_cell->y + 1 < globals::GRID_HEIGHT && !current_cell->walls[globals::DOWN])
     {
-        neighbours.push_back(GetNextCell(current_cell, DOWN));
+        neighbours.push_back(GetNextCell(current_cell, globals::DOWN));
     }
-    // Check LEFT
-    if (current_cell->x - 1 >= 0 && !current_cell->walls[LEFT])
+    // Check globals::LEFT
+    if (current_cell->x - 1 >= 0 && !current_cell->walls[globals::LEFT])
     {
-        neighbours.push_back(GetNextCell(current_cell, LEFT));
+        neighbours.push_back(GetNextCell(current_cell, globals::LEFT));
     }
     return neighbours;
 }
 
-DIRECTION Algorithms::SelectRandomPossibleDirection(Cell *current_cell)
+globals::DIRECTION Algorithms::SelectRandomPossibleDirection(Cell *current_cell)
 {
 
-    std::vector<DIRECTION> possible_dirs;
+    std::vector<globals::DIRECTION> possible_dirs;
 
-    if (current_cell->y - 1 >= 0 && !current_cell->walls[UP] && !IsVisited(&maze[current_cell->x][current_cell->y - 1]))
-    { //Check UP
-        possible_dirs.push_back(UP);
+    if (current_cell->y - 1 >= 0 && !current_cell->walls[globals::UP] && !IsVisited(&maze[current_cell->x][current_cell->y - 1]))
+    { //Check globals::UP
+        possible_dirs.push_back(globals::UP);
     }
-    if (current_cell->x + 1 < GRID_WIDTH && !current_cell->walls[RIGHT] && !IsVisited(&maze[current_cell->x + 1][current_cell->y]))
-    { //Check RIGHT
-        possible_dirs.push_back(RIGHT);
+    if (current_cell->x + 1 < globals::GRID_WIDTH && !current_cell->walls[globals::RIGHT] && !IsVisited(&maze[current_cell->x + 1][current_cell->y]))
+    { //Check globals::RIGHT
+        possible_dirs.push_back(globals::RIGHT);
     }
-    if (current_cell->y + 1 < GRID_HEIGHT && !current_cell->walls[DOWN] && !IsVisited(&maze[current_cell->x][current_cell->y + 1]))
-    { //Check DOWN
-        possible_dirs.push_back(DOWN);
+    if (current_cell->y + 1 < globals::GRID_HEIGHT && !current_cell->walls[globals::DOWN] && !IsVisited(&maze[current_cell->x][current_cell->y + 1]))
+    { //Check globals::DOWN
+        possible_dirs.push_back(globals::DOWN);
     }
-    if (current_cell->x - 1 >= 0 && !current_cell->walls[LEFT] && !IsVisited(&maze[current_cell->x - 1][current_cell->y]))
-    { //Check LEFT
-        possible_dirs.push_back(LEFT);
+    if (current_cell->x - 1 >= 0 && !current_cell->walls[globals::LEFT] && !IsVisited(&maze[current_cell->x - 1][current_cell->y]))
+    { //Check globals::LEFT
+        possible_dirs.push_back(globals::LEFT);
     }
 
     if (possible_dirs.size() > 0)
@@ -267,29 +267,29 @@ DIRECTION Algorithms::SelectRandomPossibleDirection(Cell *current_cell)
         return possible_dirs[dist(rng)];
     }
 
-    return NONE;
+    return globals::NONE;
 }
 
-DIRECTION Algorithms::SelectRandomPossibleDirectionGenerating(Cell *current_cell)
+globals::DIRECTION Algorithms::SelectRandomPossibleDirectionGenerating(Cell *current_cell)
 {
 
-    std::vector<DIRECTION> possible_dirs;
+    std::vector<globals::DIRECTION> possible_dirs;
 
-    if (current_cell->y - 1 >= 0 && current_cell->walls[UP] && !IsVisited(&maze[current_cell->x][current_cell->y - 1]))
-    { //Check UP
-        possible_dirs.push_back(UP);
+    if (current_cell->y - 1 >= 0 && current_cell->walls[globals::UP] && !IsVisited(&maze[current_cell->x][current_cell->y - 1]))
+    { //Check globals::UP
+        possible_dirs.push_back(globals::UP);
     }
-    if (current_cell->x + 1 < GRID_WIDTH && current_cell->walls[RIGHT] && !IsVisited(&maze[current_cell->x + 1][current_cell->y]))
-    { //Check RIGHT
-        possible_dirs.push_back(RIGHT);
+    if (current_cell->x + 1 < globals::GRID_WIDTH && current_cell->walls[globals::RIGHT] && !IsVisited(&maze[current_cell->x + 1][current_cell->y]))
+    { //Check globals::RIGHT
+        possible_dirs.push_back(globals::RIGHT);
     }
-    if (current_cell->y + 1 < GRID_HEIGHT && current_cell->walls[DOWN] && !IsVisited(&maze[current_cell->x][current_cell->y + 1]))
-    { //Check DOWN
-        possible_dirs.push_back(DOWN);
+    if (current_cell->y + 1 < globals::GRID_HEIGHT && current_cell->walls[globals::DOWN] && !IsVisited(&maze[current_cell->x][current_cell->y + 1]))
+    { //Check globals::DOWN
+        possible_dirs.push_back(globals::DOWN);
     }
-    if (current_cell->x - 1 >= 0 && current_cell->walls[LEFT] && !IsVisited(&maze[current_cell->x - 1][current_cell->y]))
-    { //Check LEFT
-        possible_dirs.push_back(LEFT);
+    if (current_cell->x - 1 >= 0 && current_cell->walls[globals::LEFT] && !IsVisited(&maze[current_cell->x - 1][current_cell->y]))
+    { //Check globals::LEFT
+        possible_dirs.push_back(globals::LEFT);
     }
 
     if (possible_dirs.size() > 0)
@@ -300,5 +300,5 @@ DIRECTION Algorithms::SelectRandomPossibleDirectionGenerating(Cell *current_cell
         return possible_dirs[dist(rng)];
     }
 
-    return NONE;
+    return globals::NONE;
 }
