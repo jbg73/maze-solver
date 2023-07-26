@@ -4,6 +4,8 @@
 #include <maze_controller.h>
 #include <ctime>
 #include <chrono>
+#include <list>
+
 
 class Algorithms{
 
@@ -35,6 +37,7 @@ public:
      * @param current_cell Cell from which the algorithm begins
      */
     void BruteForce(Cell* current_cell);
+    void AStar(Cell* current_cell);
     /**
      * @brief Algorithm to generate the maze
      * @details Begining at current_cell, selects a random neighbour and "breaks" the wall separating them and adds it to the list of visited cells.
@@ -77,6 +80,10 @@ private:
      * @param dir Direction in which we move from current cell
      */
     void UpdateCellWalls(Cell* cell, DIRECTION dir);
+
+    std::vector<Cell*> GetPossibleNeighbours(Cell* current_cell);
+    int ManhattanDistance(Cell* curent_cell);
+    void InitializeAStar();
     /**
      * @brief vector of current visited cells
      */
@@ -103,6 +110,8 @@ private:
      * 
      */
     bool solved = false;
+
+    std::list<Cell*> cells_to_test;
 };
 
 #endif

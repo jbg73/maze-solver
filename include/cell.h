@@ -17,6 +17,9 @@ struct Cell{
      * @brief Y coord
      */
     int y; 
+    int local_dist;
+    int global_dist;
+    Cell* parent;
     /**
      * @brief vector of cell walls;
      * @details true if existing wall, false otherwise
@@ -30,7 +33,7 @@ struct Cell{
     /**
      * @brief Construct a new Cell object
      */
-    Cell() : x{0}, y{0}, walls{true,true,true,true}{}
+    Cell() : x{0}, y{0}, local_dist{0}, global_dist{0}, walls{true,true,true,true}{}
     /**
      * @brief Construct a new Cell object
      * 

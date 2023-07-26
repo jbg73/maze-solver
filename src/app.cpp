@@ -16,7 +16,8 @@ int main(){
 
     // algorithm_controller->SetStartTime();
 
-    algorithm_controller->BruteForce(&maze[0][0]);
+    // algorithm_controller->BruteForce(&maze[0][0]);
+    algorithm_controller->AStar(&maze[0][0]);
     maze_controller->DrawGrid();
 
     // algorithm_controller.SolveA_Star(maze_controller->GetMaze()[20][20]);
