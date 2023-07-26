@@ -2,7 +2,24 @@
 #include <algorithms.h>
 #include <thread>
 
+void UserEventController()
+{
+    SDL_Event e;
+    while(true)
+    {
+        while(SDL_PollEvent(&e))
+        {
+            if (e.type == SDL_QUIT)
+            {
+                abort();
+            }
+        }
+    }
+}
+
 int main(){
+
+    std::thread event_controller_thread(UserEventController);
 
     MazeController* maze_controller = new MazeController();
     Cell** maze = maze_controller->GetMaze();
