@@ -2,7 +2,7 @@
 #include <algorithms.h>
 #include <thread>
 
-void UserEventController()
+void UserEventController(MazeController* maze_controller, Algorithms* algorithm_controller)
 {
     SDL_Event e;
     while(true)
@@ -11,7 +11,10 @@ void UserEventController()
         {
             if (e.type == SDL_QUIT)
             {
-                abort();
+                SDL_Quit();
+                delete maze_controller;
+                // delete algorithm_controller;
+                // abort();
             }
         }
     }
@@ -19,11 +22,12 @@ void UserEventController()
 
 int main(){
 
-    std::thread event_controller_thread(UserEventController);
 
     MazeController* maze_controller = new MazeController();
     Cell** maze = maze_controller->GetMaze();
     Algorithms* algorithm_controller = new Algorithms(maze, *maze_controller);
+
+    // std::thread event_controller_thread(UserEventController, maze_controller, algorithm_controller);
 
     algorithm_controller->GenerateRandomMaze(&maze[0][0]);
     algorithm_controller->ClearVisitedCells();
@@ -35,11 +39,9 @@ int main(){
 
     // algorithm_controller->BruteForce(&maze[0][0]);
     algorithm_controller->AStar(&maze[0][0]);
-    maze_controller->DrawGrid();
+    // maze_controller->DrawGrid();
 
-    // algorithm_controller.SolveA_Star(maze_controller->GetMaze()[20][20]);
-
-    maze_controller->ShowWindow();
+    // maze_controller->ShowWindow();
 
     // Wait for a key press to exit
     bool quit = false;

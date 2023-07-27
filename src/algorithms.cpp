@@ -4,7 +4,6 @@
 Algorithms::Algorithms(Cell **maze_ref, MazeController &maze_controller_ref) : maze_controller{maze_controller_ref}
 {
     maze = maze_ref;
-    std::cout << "maze controller alg: " << &maze_controller << std::endl;
 }
 
 Algorithms::~Algorithms()
@@ -101,26 +100,10 @@ void Algorithms::GenerateRandomMaze(Cell *current_cell)
     }
 }
 
-// void Algorithms::SolveA_Star(Cell current_cell){
-//     actual_time = std::chrono::high_resolution_clock::now();
-//     ui_controller.PaintCell(current_cell);
-//     SDL_RenderPresent(ui_controller.GetRenderer());
-//     SDL_Delay(10);
-//     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(actual_time - start_time).count() << std::endl;
-//     if(std::chrono::duration_cast<std::chrono::milliseconds>(actual_time - start_time).count() > 5000) return;
-//     else{
-//         int v1 = rand() % 4;
-//         Cell next_cell = current_cell.GetNextCell(static_cast<globals::DIRECTION>(v1));
-//         SolveA_Star(next_cell);
-
-//     }
-
-// }
-
 void Algorithms::BruteForce(Cell *current_cell)
 {
     current_path.push_back(current_cell);
-    maze_controller.ShowPath(current_path);
+    maze_controller.ShowPath(current_path, current_path);
     SDL_Delay(150);
     if (current_cell->x == globals::GRID_WIDTH - 1 && current_cell->y == globals::GRID_HEIGHT - 1)
     {
@@ -149,21 +132,38 @@ void Algorithms::BruteForce(Cell *current_cell)
     }
 }
 
+std::vector<Cell *> Algorithms::GetAStarCurrentPath(Cell *current_cell)
+{
+    std::vector<Cell *> a_star_current_path;
+    Cell *aux = current_cell;
+    while (aux->x != 0 || aux->y != 0)
+    {
+        a_star_current_path.push_back(aux);
+        aux = aux->parent;
+    }
+    a_star_current_path.push_back(aux);
+    return a_star_current_path;
+}
+
 void Algorithms::AStar(Cell *current_cell)
 {
-    std::vector<Cell *> neighbour_cells;
+    bool target_found = false;
+    SDL_Delay(1000);
+    std::vector<Cell *> neighbour_cells, visited_cells;
     InitializeAStar();
     cells_to_test.push_back(current_cell);
-    while (!cells_to_test.empty())
+    do
     {
-        std::cout << "solving..." << std::endl;
+        SDL_Delay(1);
         current_cell = *cells_to_test.begin();
+        // visited_cells.push_back(current_cell);
+        maze_controller.ShowPath(visited_cells, GetAStarCurrentPath(current_cell));
         neighbour_cells = GetPossibleNeighbours(current_cell);
         for (auto neighbour : neighbour_cells)
         {
             if (current_cell->local_dist + 1 < neighbour->local_dist)
             {
-                if ((neighbour->x * globals::CELL_SIZE) != globals::GRID_WIDTH - 1 && (neighbour->y * globals::CELL_SIZE) != globals::GRID_HEIGHT - 1)
+                if (neighbour->x != globals::GRID_WIDTH - 1 || neighbour->y != globals::GRID_HEIGHT - 1)
                 {
                     cells_to_test.push_back(neighbour);
                 }
@@ -173,23 +173,26 @@ void Algorithms::AStar(Cell *current_cell)
             }
         }
         cells_to_test.erase(cells_to_test.begin());
-        // visited_cells.add(current_cell);
+        visited_cells.push_back(current_cell);
         cells_to_test.sort([](Cell *c1, Cell *c2)
                            { return c1->global_dist < c2->global_dist; });
-    }
+    } while (!cells_to_test.empty() && !target_found);
     
     std::cout << "-----------------------------------------------------------------" << std::endl;
-    Cell* aux = &maze[globals::GRID_WIDTH-1][globals::GRID_HEIGHT-1];
-    while(aux->x != 0 || aux->y != 0)
-    {
-        std::cout << aux->x << "-" << aux->y << std::endl;
-        current_path.push_back(aux);
-        maze_controller.PaintCell(aux, 255,0,0);
-        aux = aux->parent;
-    }
-    maze_controller.PaintCell(aux, 255,0,0);
-    // maze_controller.ShowPath(current_path);
-    std::cout << "Found path of " << current_path.size() << " steps" << std::endl;
+    maze_controller.ShowPath(visited_cells, GetAStarCurrentPath(&maze[globals::GRID_WIDTH-1][globals::GRID_HEIGHT-1]));
+    // SDL_RenderPresent(maze_controller.GetRenderer());
+    // Cell *aux = &maze[globals::GRID_WIDTH - 1][globals::GRID_HEIGHT - 1];
+    // while (aux->x != 0 || aux->y != 0)
+    // {
+    //     // std::cout << aux->x << "-" << aux->y << std::endl;
+    //     current_path.push_back(aux);
+    //     maze_controller.PaintCell(aux, 255, 0, 0);
+    //     aux = aux->parent;
+    // }
+    // maze_controller.PaintCell(aux, 255, 0, 0);
+    // maze_controller.PaintCell(&maze[globals::GRID_WIDTH - 1][globals::GRID_HEIGHT - 1], 0, 255, 0);
+    // // maze_controller.ShowPath(current_path);
+    // std::cout << "Found path of " << current_path.size() << " steps" << std::endl;
 }
 
 void Algorithms::InitializeAStar()

@@ -83,6 +83,7 @@ private:
 
     std::vector<Cell*> GetPossibleNeighbours(Cell* current_cell);
     int ManhattanDistance(Cell* curent_cell);
+    std::vector<Cell*> GetAStarCurrentPath(Cell* current_cell);
     void InitializeAStar();
     /**
      * @brief vector of current visited cells

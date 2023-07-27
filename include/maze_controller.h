@@ -49,7 +49,7 @@ public:
      * For the last position (current cell), it changes the colour to highlight it.
      * @param visited_cells vector containing the current visited cells
      */
-    void ShowPath(std::vector<Cell*> visited_cells) const;
+    void ShowPath(std::vector<Cell*> visited_cells, std::vector<Cell*> current_path) const;
     /**
     * @brief Paints the cell from the argument in the specified colour (Orange by default)
     * @param Cell to paint
